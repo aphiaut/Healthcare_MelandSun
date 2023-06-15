@@ -1,0 +1,42 @@
+---
+title: "clean data"
+author: "Aphiaut Imuan"
+date: "23/4/2565"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+library(tidyverse)
+```
+
+
+```{r}
+AIHW <- read.csv("Data/AIHW_MBS_1920_2021_CSV.csv")
+```
+
+```{r}
+load(here::here("data/AIHW.rda"))
+```
+
+
+```{r}
+AIHW <- AIHW %>%
+  filter(StateTerritory == "Vic") %>%
+  filter(Worksheet == "SA3") %>%
+  select("Year", "GeographicAreaName", "Service", "DemographicGroup", "MeasureName",        "MeasureValue")
+
+```
+
+```{r}
+AIHW <- AIHW %>%
+    filter(DemographicGroup == "All persons") %>%
+    select("Year", "GeographicAreaName", "Service", "MeasureName", "MeasureValue") %>%
+    filter(MeasureName %in% c("Medicare benefits per 100 people ($)", "No. of patients", "Total provider fees ($)", "Total Medicare benefits paid ($)")) %>%
+    filter(Service %in% c('GP attendances (total)', 'Specialist attendances (total)')) %>%
+    filter(GeographicAreaName %in% c("Melbourne City", "Sunbury"))
+save(AIHW, file=here::here("data/AIHW.rda"))
+```
+
