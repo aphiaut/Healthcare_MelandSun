@@ -43,21 +43,24 @@ benefit_100 <- AIHW %>%
 ```
 
 
+
 ```{r benefit100, fig.cap = "Medicare benefits per 100 people ($)", echo=FALSE ,out.width = "80%", fig.height = 5, fig.align='center',out.extra='angle=90'}
+benefit_100$Year[benefit_100$Year == "2019-20"] <- "2019-2020"
+benefit_100$Year[benefit_100$Year == "2020-21"] <- "2020-2021"
 benefit_100 %>% 
-ggplot( aes(x = Year , y = GP_attendances))+
-  geom_col(color = "yellow") +
-  scale_fill_brewer(palette="Pastel1") + 
+ggplot( aes(x = Year , y = GP_attendances, fill = Year))+
+  geom_col() +
   facet_wrap(~ GeographicAreaName)+
+  scale_fill_brewer(palette="Pastel1") + 
   labs(subtitle = "Medicare benefits per 100 people ($)",
        caption = "www.aihw.gov.au",
        x = "Year",
        y = "Medicare benefits per 100 people ($)")+
   theme(plot.caption= element_text(size=5,
-                                   color="orange",
+                                   color="blue",
                                    face="bold",
-                                   vjust = 5))+ 
-  theme_bw()
+                                   vjust = 5),
+        legend.position="none")
 ```
 
 ```{r test2, echo=FALSE}
@@ -70,12 +73,16 @@ benefit_total <- AIHW %>%
                         values_from = Med_benefit) %>%
             rename(GP_attendances = 'GP attendances (total)') %>%
             rename(Specialist_attendances = 'Specialist attendances (total)') 
+
+
+benefit_total$Year[benefit_total$Year == "2019-20"] <- "2019-2020"
+benefit_total$Year[benefit_total$Year == "2020-21"] <- "2020-2021"
 ```
 
 ```{r benefit, fig.cap = "Total Medicare benefits paid ($)", echo=FALSE ,out.width = "80%", fig.height = 5, fig.align='center',out.extra='angle=90'}
 benefit_total %>% 
-ggplot( aes(x = Year , y = GP_attendances))+
-  geom_col(color = "yellow") +
+ggplot( aes(x = Year , y = GP_attendances, fill = Year))+
+  geom_col() +
   scale_fill_brewer(palette="Pastel1") + 
   facet_wrap(~ GeographicAreaName)+
   labs(subtitle = "Total Medicare benefits paid ($)",
@@ -83,10 +90,10 @@ ggplot( aes(x = Year , y = GP_attendances))+
        x = "Year",
        y = "Total Medicare benefits paid ($)")+
   theme(plot.caption= element_text(size=5,
-                                   color="orange",
+                                   color="blue",
                                    face="bold",
-                                   vjust = 5))+ 
-  theme_bw()
+                                   vjust = 5),
+        legend.position="none") 
 ```
 
 ```{r patients, echo=FALSE}
@@ -97,9 +104,12 @@ num_patient <- AIHW %>%
             rename(patient = 'No. of patients')   %>%
             pivot_wider(names_from = Service,
                         values_from = patient) %>%
-            rename(GP_attendances = 'GP attendances (total)') %>%
-            rename(Specialist_attendances = 'Specialist attendances (total)') %>%
+            rename("GP attendances" = 'GP attendances (total)') %>%
+            rename("Specialist attendances" = 'Specialist attendances (total)') %>%
             rename(Name = GeographicAreaName)
+
+num_patient$Year[num_patient$Year == "2019-20"] <- "2019-2020"
+num_patient$Year[num_patient$Year == "2020-21"] <- "2020-2021"
 
 num_patient %>%
             arrange(Name) %>%
@@ -116,9 +126,12 @@ total_fee <- AIHW %>%
             rename(fee = 'Total provider fees ($)') %>%
             pivot_wider(names_from = Service,
                         values_from = fee) %>%
-            rename(GP_attendances = 'GP attendances (total)') %>%
-            rename(Specialist_attendances = 'Specialist attendances (total)') %>%
+            rename("GP attendances" = 'GP attendances (total)') %>%
+            rename("Specialist attendances" = 'Specialist attendances (total)') %>%
             rename(Name = GeographicAreaName)
+
+total_fee$Year[total_fee$Year == "2019-20"] <- "2019-2020"
+total_fee$Year[total_fee$Year == "2020-21"] <- "2020-2021"
 
 total_fee %>%
             arrange(Name) %>%
@@ -126,6 +139,7 @@ total_fee %>%
     kable_material(full_width = FALSE, position = "center")
 ```
 
+**Examination:**
 
 Figure \@ref(fig:benefit100) illustrates the Medicare benefits per 100 people of Sunbury more than Melbourne city since 2019 until 2021 on the other hand figure \@ref(fig:benefit) shows Total Medicare benefit paid of Melbourne city more than Sunbury around 66.66 % and 50 % in 2019 and 2020, respectively. Moreover, both figures show the conflict of result that means both of variables have different measures. In the investigation of this report, it was found that the measures are not same by Total Medicare benefits paid is measured by the end of year (December) while Medicare benefits per 100 people is used by the end of previous financial year (June). Furthermore, the decreasing of number of patients in both of area in table \@ref(tab:patients) can refer to migration backed to their countries because of COVID-19 pandemic. Moreover, table \@ref(tab:fee) illustrates the increasing of total provider fee in both of general practitioner (GP) attendances and specialist attendance. The reason for the increasing may be due to the side effects of COVID-19 pandemic such as psychological distress for adults aged 18–45 and decreased services at the start of pandemic and followed by slightly above the previous year (Australian Institute of Health and Welfare, 2021).
 
